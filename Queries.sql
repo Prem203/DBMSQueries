@@ -4,8 +4,7 @@ CREATE TABLE "MusicVideo" (
 	"video_director"	TEXT,
 	"name"	TEXT NOT NULL,
 	PRIMARY KEY("track_id"),
-	FOREIGN KEY("track_id") REFERENCES "tracks"("TrackId")
-);
+	FOREIGN KEY("track_id") REFERENCES "tracks"("TrackId"));
 
 -- Query 2:
 INSERT INTO MusicVideo ( track_id, video_director, name)
