@@ -76,3 +76,34 @@ FROM artists, albums
 WHERE artists.ArtistId = albums.ArtistId
 GROUP BY artists.Name;
 ```
+
+### Query 7: Writes a query that lists all the customers that listen to longer-than-average tracks, excluding the tracks that are longer than 15 minutes.
+
+```
+SELECT DISTINCT c.CustomerId, c.FirstName, c.LastName, (t.milliseconds)/60000 as minutes, (Select avg(milliseconds) from tracks)/60000 as average
+FROM customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId
+JOIN invoice_items ii ON i.InvoiceId = ii.InvoiceId
+JOIN tracks t ON ii.TrackId = t.TrackId
+WHERE t.Milliseconds > (
+    SELECT AVG(Milliseconds) FROM tracks
+)
+AND t.Milliseconds <= 900000
+GROUP BY c.customerid
+ORDER BY c.customerid asc;
+```
+
+### Query 8: Writes a query that lists all the tracks that are not in one of the top 5 genres with longer duration in the database.
+
+```
+SELECT g.Name AS GenreName, g.genreid
+FROM tracks t
+JOIN genres g ON t.GenreId = g.GenreId
+WHERE t.GenreId NOT IN (
+    SELECT g.GenreId
+    FROM genres g
+    JOIN tracks t ON g.GenreId = t.GenreId
+    GROUP BY g.GenreId
+    ORDER BY AVG(t.Milliseconds) DESC
+    LIMIT 5);
+```
